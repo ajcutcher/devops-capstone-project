@@ -23,7 +23,7 @@ def health():
 # GET INDEX
 ######################################################################
 @app.route("/")
-def index():
+def root():
     """Root URL response"""
     return (
         jsonify(
