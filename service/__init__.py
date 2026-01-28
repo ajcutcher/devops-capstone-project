@@ -37,6 +37,4 @@ except Exception as error:  # pylint: disable=broad-except
 
 app.logger.info("Service initialized!")
 
-@app.route("/", methods=["GET"])
-def root():
-    return jsonify({"name": "Account REST API Service", "version": "1.0"})
+
