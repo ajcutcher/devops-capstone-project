@@ -8,6 +8,7 @@ import sys
 from flask import Flask
 from service import config
 from service.common import log_handlers
+from flask import Flask, jsonify
 
 # Create Flask application
 app = Flask(__name__)
@@ -35,3 +36,7 @@ except Exception as error:  # pylint: disable=broad-except
     sys.exit(4)
 
 app.logger.info("Service initialized!")
+
+@app.route("/", methods=["GET"])
+def root():
+    return jsonify({"name": "Account REST API Service", "version": "1.0"})
