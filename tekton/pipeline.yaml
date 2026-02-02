@@ -1,12 +1,6 @@
-#
-# This pipeline needs the following tasks from Tekton Hub
-#   - git-clone
-#   - flake8
-#
----
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
-metadata:  
+metadata:
   name: cd-pipeline
 spec:
   workspaces:
@@ -27,7 +21,7 @@ spec:
 
     - name: clone
       workspaces:
-        - name: output
+        - name: source
           workspace: pipeline-workspace
       taskRef:
         name: git-clone
@@ -47,9 +41,23 @@ spec:
         name: flake8
       params:
         - name: image
-          value: "python:3.9-slim"
+          value: "pyfound/flake8:latest"
         - name: args
           value:
             ["--count","--max-complexity=10","--max-line-length=127","--statistics"]
       runAfter:
         - clone
+
+    - name: tests
+      workspaces:
+        - name: source
+          workspace: pipeline-workspace
+      taskRef:
+        name: nose
+      params:
+        - name: database_uri
+          value: "sqlite:///test.db"
+        - name: args
+          value: "-v --with-spec --spec-color"
+      runAfter:
+        - lint
